@@ -1,3 +1,5 @@
+import math
+
 class Vector:
     def __init__(self, vector_data):
         self.data = vector_data
@@ -25,6 +27,12 @@ class Vector:
     def __str__(self):
         return str(self.data)
 
+    def norm(self):
+        val = 0
+        for i in self.data:
+            val += i * i
+        return math.sqrt(val)
+
 
 class Data:
     def __init__(self, x, y):
@@ -37,11 +45,12 @@ def calc_y(data, w, b):
 
 
 def training(data_list, w, b, learning_rate):
+    r = max(data.x.norm() for data in data_list)
     changed = False
     for data in data_list:
         if data.y * calc_y(data, w, b) <= 0:
             w += data.x * (learning_rate * data.y)
-            b += learning_rate * data.y
+            b += learning_rate * data.y * r * r
             changed = True
 
     return changed, b
